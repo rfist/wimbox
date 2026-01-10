@@ -1,0 +1,29 @@
+services:
+  linkding:
+    image: sissbruecker/linkding:latest
+    container_name: linkding
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD-SHELL", "curl --silent --fail http://localhost:9090/health || exit 1"]
+    env_file:
+      - ../core/.env
+    environment:
+      - LD_ALLOWED_HOSTS=linkding.${BASE_DOMAIN}
+      - LD_CSRF_TRUSTED_ORIGINS=http://linkding.${BASE_DOMAIN},https://linkding.${BASE_DOMAIN}
+    volumes:
+      - /home/wimbox/.local/share/wimbox/appdata/linkding:/etc/linkding/data
+    labels:
+      - "traefik.enable=true"
+      - "traefik.http.routers.linkding.rule=Host(`linkding.${BASE_DOMAIN}`)"
+      - "traefik.http.routers.linkding.entrypoints=web"
+      - "traefik.http.services.linkding.loadbalancer.server.port=9090"
+      - "traefik.http.middlewares.linkding-headers.headers.customrequestheaders.X-Forwarded-Proto=https"
+      - "traefik.http.routers.linkding.middlewares=linkding-headers"
+      - "diun.enable=true"
+    networks:
+      - traefik
+
+networks:
+  traefik:
+    external: true
+
