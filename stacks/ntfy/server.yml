@@ -1,0 +1,9 @@
+behind-proxy: true
+
+# Access control (private instance)
+auth-file: /var/cache/ntfy/user.db
+auth-default-access: deny-all
+
+# Let you log in via the web UI (signup stays off by default)
+enable-login: true
+
