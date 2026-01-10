@@ -1,0 +1,27 @@
+services:
+  ntfy:
+    image: binwiederhier/ntfy:latest
+    container_name: ntfy
+    restart: unless-stopped
+    command: serve
+    env_file:
+      - .env
+    volumes:
+      - ${APPDATA_ROOT}/ntfy/cache:/var/cache/ntfy
+      - ${APPDATA_ROOT}/ntfy/config:/etc/ntfy
+      - ./server.yml:/etc/ntfy/server.yml:ro
+    networks:
+      - traefik
+    labels:
+      - "traefik.enable=true"
+      - "traefik.http.routers.ntfy.rule=Host(`ntfy.${BASE_DOMAIN}`)"
+      - "traefik.http.routers.ntfy.entrypoints=web"
+      - "traefik.http.services.ntfy.loadbalancer.server.port=80"
+      # keep scheme consistent behind Cloudflare (same trick as Portainer)
+      - "traefik.http.middlewares.ntfy-headers.headers.customrequestheaders.X-Forwarded-Proto=https"
+      - "testlabel"
+      - "traefik.http.routers.ntfy.middlewares=ntfy-headers"
+
+networks:
+  traefik:
+    external: true
