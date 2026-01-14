@@ -11,7 +11,7 @@ services:
     restart: unless-stopped
     labels:
       - traefik.enable=true
-      - traefik.http.routers.freshrss.rule=Host(`freshrss.${BASE_DOMAIN}`)
+      - traefik.http.routers.freshrss.rule=Host(`rss.${BASE_DOMAIN}`)
       - traefik.http.routers.freshrss.entrypoints=web
       #- "traefik.http.middlewares.freshrss-headers.headers.customrequestheaders.X-Forwarded-Proto=https"
       - diun.enable=true
