@@ -6,7 +6,7 @@ services:
     healthcheck:
       test: ["CMD-SHELL", "curl --silent --fail http://localhost:9090/health || exit 1"]
     env_file:
-      - ../core/.env
+      - .env
     environment:
       - LD_ALLOWED_HOSTS=linkding.${BASE_DOMAIN}
       - LD_CSRF_TRUSTED_ORIGINS=http://linkding.${BASE_DOMAIN},https://linkding.${BASE_DOMAIN}

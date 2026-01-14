@@ -3,3 +3,4 @@
 **/data/
 **/config/
 **/tmp/
+env/global.env
