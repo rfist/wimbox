@@ -1,0 +1,23 @@
+services:
+  freshrss:
+    image: freshrss/freshrss:latest
+    container_name: freshrss
+    environment:
+      - TZ=${TZ}
+      - CRON_MIN=*/30
+    volumes:
+      - ${APPDATA_ROOT}/freshrss/data:/var/www/FreshRSS/data
+      - ${APPDATA_ROOT}/freshrss/extensions:/var/www/FreshRSS/extensions
+    restart: unless-stopped
+    labels:
+      - traefik.enable=true
+      - traefik.http.routers.freshrss.rule=Host(`freshrss.${BASE_DOMAIN}`)
+      - traefik.http.routers.freshrss.entrypoints=web
+      #- "traefik.http.middlewares.freshrss-headers.headers.customrequestheaders.X-Forwarded-Proto=https"
+      - diun.enable=true
+    networks:
+      - traefik
+
+networks:
+  traefik:
+    external: true
