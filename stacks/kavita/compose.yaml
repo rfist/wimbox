@@ -1,0 +1,26 @@
+services:
+  kavita:
+    image: jvmilazz0/kavita:latest
+    container_name: kavita
+    restart: unless-stopped
+    env_file:
+      - .env
+    environment:
+      - TZ=${TZ}
+    volumes:
+      - ${MEDIA_ROOT}/kavita/manga:/manga
+      - ${MEDIA_ROOT}/kavita/comics:/comics
+      - ${MEDIA_ROOT}/kavita/books:/books
+      - ${MEDIA_ROOT}/kavita/config:/kavita/config
+    labels:
+      - "traefik.enable=true"
+      - "traefik.http.routers.kavita.rule=Host(`kavita.${BASE_DOMAIN}`)"
+      - "traefik.http.routers.kavita.entrypoints=web"
+      - "traefik.http.services.kavita.loadbalancer.server.port=5000"
+      - "diun.enable=true"
+    networks:
+      - traefik
+
+networks:
+  traefik:
+    external: true
