@@ -1,0 +1,23 @@
+services:
+  plex:
+    image: lscr.io/linuxserver/plex:latest
+    container_name: plex
+    network_mode: host
+    restart: unless-stopped
+    environment:
+      - PUID=1000
+      - PGID=1000
+      - TZ=${TZ}
+      - VERSION=docker
+      # Optional: claim token for first-time setup (expires quickly)
+      - PLEX_CLAIM=${PLEX_CLAIM}
+    volumes:
+      - ${APPDATA_ROOT}/plex:/config
+      - /tmp/plex-transcode:/transcode
+      - ${MEDIA_ROOT}/movies:/movies
+      - ${MEDIA_ROOT}/tv:/tv
+      # add more as needed:
+      # - ${MEDIA_ROOT}/music:/music
+    labels:
+      - "diun.enable=true"
+
