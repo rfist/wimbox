@@ -1,0 +1,16 @@
+services:
+  syncthing:
+    image: lscr.io/linuxserver/syncthing:latest
+    container_name: syncthing
+    network_mode: host
+    restart: unless-stopped
+    environment:
+      - PUID=1000
+      - PGID=1000
+      - TZ=${TZ}
+    volumes:
+      - ${APPDATA_ROOT}/syncthing:/config
+      - ${MEDIA_ROOT}/syncthing:/data
+    labels:
+      - "diun.enable=true"
+
