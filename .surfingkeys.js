@@ -3,7 +3,7 @@
 
 // Configure blacklist pattern to exclude specific sites
 // This pattern matches kagi.com and rememberthemilk.com domains and their subdomains
-settings.blacklistPattern = /https?:\/\/([^\/]*\.)?kagi\.com|https?:\/\/([^\/]*\.)?rememberthemilk\.com/i;
+settings.blacklistPattern = /https?:\/\/([^\/]*\.)?(kagi\.com|rememberthemilk\.com)/i;
 
 // Alternative: You can also use individual patterns like this:
 // settings.blacklistPattern = /kagi\.com/i;
