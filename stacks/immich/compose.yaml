@@ -1,0 +1,73 @@
+services:
+  immich-server:
+    image: ghcr.io/immich-app/immich-server:release
+    container_name: immich_server
+    restart: unless-stopped
+    env_file:
+      - .env
+    environment:
+      - TZ=${TZ}
+      - DB_HOSTNAME=immich-database
+      - DB_USERNAME=${IMMICH_DB_USERNAME:-immich}
+      - DB_PASSWORD=${IMMICH_DB_PASSWORD:-immich}
+      - DB_DATABASE_NAME=${IMMICH_DB_DATABASE_NAME:-immich}
+      - REDIS_HOSTNAME=immich-redis
+    volumes:
+      - ${MEDIA_ROOT}/immich/library:/usr/src/app/upload
+    labels:
+      - "traefik.enable=true"
+      - "traefik.http.routers.immich.rule=Host(`immich.${BASE_DOMAIN}`)"
+      - "traefik.http.routers.immich.entrypoints=web"
+      - "traefik.http.services.immich.loadbalancer.server.port=2283"
+      - "diun.enable=true"
+    depends_on:
+      - immich-redis
+      - immich-database
+    networks:
+      - traefik
+
+  immich-machine-learning:
+    image: ghcr.io/immich-app/immich-machine-learning:release
+    container_name: immich_machine_learning
+    restart: unless-stopped
+    env_file:
+      - .env
+    environment:
+      - TZ=${TZ}
+    volumes:
+      - ${APPDATA_ROOT}/immich/model-cache:/cache
+    labels:
+      - "diun.enable=true"
+    networks:
+      - traefik
+
+  immich-redis:
+    image: redis:7-alpine
+    container_name: immich_redis
+    restart: unless-stopped
+    labels:
+      - "diun.enable=true"
+    networks:
+      - traefik
+
+  immich-database:
+    image: tensorchord/pgvecto-rs:pg14-v0.2.0
+    container_name: immich_database
+    restart: unless-stopped
+    env_file:
+      - .env
+    environment:
+      - POSTGRES_USER=${IMMICH_DB_USERNAME:-immich}
+      - POSTGRES_PASSWORD=${IMMICH_DB_PASSWORD:-immich}
+      - POSTGRES_DB=${IMMICH_DB_DATABASE_NAME:-immich}
+      - POSTGRES_INITDB_ARGS=--data-checksums
+    volumes:
+      - ${APPDATA_ROOT}/immich/postgres:/var/lib/postgresql/data
+    labels:
+      - "diun.enable=true"
+    networks:
+      - traefik
+
+networks:
+  traefik:
+    external: true
