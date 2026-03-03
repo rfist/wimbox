@@ -1,0 +1,45 @@
+services:
+  chibisafe:
+    image: chibisafe/chibisafe:latest
+    container_name: chibisafe
+    environment:
+      - BASE_API_URL=http://chibisafe_server:8000
+    expose:
+      - 8001
+    restart: unless-stopped
+    depends_on:
+      - chibisafe_server
+    labels:
+      - traefik.enable=true
+      - traefik.http.routers.chibisafe.rule=Host(`chibisafe.${BASE_DOMAIN}`)
+      - traefik.http.routers.chibisafe.entrypoints=web
+      - traefik.http.services.chibisafe.loadbalancer.server.port=8001
+      - diun.enable=true
+    networks:
+      - traefik
+
+  chibisafe_server:
+    image: chibisafe/chibisafe-server:latest
+    container_name: chibisafe_server
+    environment:
+      - ADMIN_PASSWORD=${CHIBISAFE_ADMIN_PASSWORD:-admin}
+    volumes:
+      - ${APPDATA_ROOT}/chibisafe/database:/app/database:rw
+      - ${APPDATA_ROOT}/chibisafe/uploads:/app/uploads:rw
+      - ${APPDATA_ROOT}/chibisafe/logs:/app/logs:rw
+    expose:
+      - 8000
+    restart: unless-stopped
+    labels:
+      - traefik.enable=true
+      - traefik.http.routers.chibisafe-api.rule=Host(`chibisafe.${BASE_DOMAIN}`) && (PathPrefix(`/api`) || PathPrefix(`/docs`))
+      - traefik.http.routers.chibisafe-api.entrypoints=web
+      - traefik.http.routers.chibisafe-api.priority=10
+      - traefik.http.services.chibisafe-api.loadbalancer.server.port=8000
+      - diun.enable=true
+    networks:
+      - traefik
+
+networks:
+  traefik:
+    external: true
