@@ -1,0 +1,29 @@
+services:
+  kosync:
+    image: koreader/kosync:latest
+    container_name: kosync
+    restart: unless-stopped
+    env_file:
+      - .env
+    environment:
+      - TZ=${TZ}
+      - ENABLE_USER_REGISTRATION=${KOSYNC_ENABLE_USER_REGISTRATION:-true}
+      - GIN_ENV=production
+    expose:
+      - 17200
+    volumes:
+      - ${APPDATA_ROOT}/kosync/logs/app:/app/koreader-sync-server/logs
+      - ${APPDATA_ROOT}/kosync/logs/redis:/var/log/redis
+      - ${APPDATA_ROOT}/kosync/redis:/var/lib/redis
+    labels:
+      - traefik.enable=true
+      - traefik.http.routers.kosync.rule=Host(`kosync.${BASE_DOMAIN}`)
+      - traefik.http.routers.kosync.entrypoints=web
+      - traefik.http.services.kosync.loadbalancer.server.port=17200
+      - diun.enable=true
+    networks:
+      - traefik
+
+networks:
+  traefik:
+    external: true
