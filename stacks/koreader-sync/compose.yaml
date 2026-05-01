@@ -1,6 +1,7 @@
 services:
   kosync:
-    image: koreader/kosync:latest
+    build:
+      context: https://github.com/koreader/koreader-sync-server.git
     container_name: kosync
     restart: unless-stopped
     env_file:
@@ -20,7 +21,6 @@ services:
       - traefik.http.routers.kosync.rule=Host(`kosync.${BASE_DOMAIN}`)
       - traefik.http.routers.kosync.entrypoints=web
       - traefik.http.services.kosync.loadbalancer.server.port=17200
-      - diun.enable=true
     networks:
       - traefik
 
