@@ -8,6 +8,7 @@ services:
     environment:
       - DATABASE_URL=postgres://miniflux:${MINIFLUX_DB_PASSWORD}@miniflux-db/miniflux?sslmode=disable
       - RUN_MIGRATIONS=1
+      - CREATE_ADMIN=1
       - ADMIN_USERNAME=${MINIFLUX_ADMIN_USERNAME}
       - ADMIN_PASSWORD=${MINIFLUX_ADMIN_PASSWORD}
       - BASE_URL=https://rss.${BASE_DOMAIN}
