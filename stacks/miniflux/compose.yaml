@@ -1,0 +1,52 @@
+services:
+  miniflux:
+    image: miniflux/miniflux:latest
+    container_name: miniflux
+    restart: unless-stopped
+    env_file:
+      - .env
+    environment:
+      - DATABASE_URL=postgres://miniflux:${MINIFLUX_DB_PASSWORD}@miniflux-db/miniflux?sslmode=disable
+      - RUN_MIGRATIONS=1
+      - ADMIN_USERNAME=${MINIFLUX_ADMIN_USERNAME}
+      - ADMIN_PASSWORD=${MINIFLUX_ADMIN_PASSWORD}
+      - BASE_URL=https://rss.${BASE_DOMAIN}
+    depends_on:
+      miniflux-db:
+        condition: service_healthy
+    labels:
+      - "traefik.enable=true"
+      - "traefik.http.routers.miniflux.rule=Host(`rss.${BASE_DOMAIN}`)"
+      - "traefik.http.routers.miniflux.entrypoints=web"
+      - "traefik.http.services.miniflux.loadbalancer.server.port=8080"
+      - "traefik.http.middlewares.miniflux-headers.headers.customrequestheaders.X-Forwarded-Proto=https"
+      - "traefik.http.routers.miniflux.middlewares=miniflux-headers"
+      - "diun.enable=true"
+    networks:
+      - traefik
+
+  miniflux-db:
+    image: postgres:16-alpine
+    container_name: miniflux-db
+    restart: unless-stopped
+    env_file:
+      - .env
+    environment:
+      - POSTGRES_USER=miniflux
+      - POSTGRES_PASSWORD=${MINIFLUX_DB_PASSWORD}
+      - POSTGRES_DB=miniflux
+    volumes:
+      - ${APPDATA_ROOT}/miniflux/postgres:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U miniflux"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+    labels:
+      - "diun.enable=true"
+    networks:
+      - traefik
+
+networks:
+  traefik:
+    external: true
