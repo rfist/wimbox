@@ -1,10 +1,21 @@
-- Social:
-    - Reddit:
-        - abbr: R
-          href: https://reddit.com
+# Copy to ${APPDATA_ROOT}/homepage/bookmarks.yaml on the Pi
+# Homepage hot-reloads on save — no restart needed
+
+- Media:
+    - YouTube:
+        - abbr: YT
+          href: https://youtube.com
+    - Twitch:
+        - abbr: TW
+          href: https://twitch.tv
+
+- News:
     - Hacker News:
         - abbr: HN
           href: https://news.ycombinator.com
+    - Lobsters:
+        - abbr: LB
+          href: https://lobste.rs
 
 - Tools:
     - Excalidraw:
