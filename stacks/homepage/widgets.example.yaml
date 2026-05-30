@@ -1,6 +1,3 @@
-# Copy to ${APPDATA_ROOT}/homepage/widgets.yaml on the Pi
-# Homepage hot-reloads on save — no restart needed
-
 - resources:
     cpu: true
     memory: true
