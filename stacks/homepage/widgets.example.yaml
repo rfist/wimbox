@@ -1,0 +1,20 @@
+# Copy to ${APPDATA_ROOT}/homepage/widgets.yaml on the Pi
+# Homepage hot-reloads on save — no restart needed
+
+- resources:
+    cpu: true
+    memory: true
+    disk: /
+    uptime: true
+    units: metric
+
+- datetime:
+    text_size: xl
+    format:
+      dateStyle: long
+      timeStyle: short
+      hour12: false
+
+- search:
+    provider: duckduckgo
+    target: _blank
