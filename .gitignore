@@ -4,3 +4,11 @@
 **/config/
 **/tmp/
 env/global.env
+
+# Homepage — actual configs (copy from *.example.yaml, edit locally)
+stacks/homepage/services.yaml
+stacks/homepage/bookmarks.yaml
+stacks/homepage/widgets.yaml
+stacks/homepage/settings.yaml
+stacks/homepage/custom.css
+stacks/homepage/custom.js
