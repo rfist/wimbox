@@ -1,0 +1,55 @@
+services:
+  karakeep:
+    image: ghcr.io/karakeep-app/karakeep:release
+    container_name: karakeep
+    restart: unless-stopped
+    env_file:
+      - .env
+    environment:
+      - MEILI_ADDR=http://karakeep-meilisearch:7700
+      - MEILI_MASTER_KEY=${KARAKEEP_MEILI_MASTER_KEY}
+      - NEXTAUTH_SECRET=${KARAKEEP_NEXTAUTH_SECRET}
+      - NEXTAUTH_URL=https://karakeep.${BASE_DOMAIN}
+      - BROWSER_WEB_URL=http://karakeep-chrome:9222
+      - DATA_DIR=/data
+    volumes:
+      - ${APPDATA_ROOT}/karakeep/data:/data
+    depends_on:
+      - karakeep-chrome
+      - karakeep-meilisearch
+    labels:
+      - "traefik.enable=true"
+      - "traefik.http.routers.karakeep.rule=Host(`karakeep.${BASE_DOMAIN}`)"
+      - "traefik.http.routers.karakeep.entrypoints=web"
+      - "traefik.http.services.karakeep.loadbalancer.server.port=3000"
+      - "traefik.http.middlewares.karakeep-headers.headers.customrequestheaders.X-Forwarded-Proto=https"
+      - "traefik.http.routers.karakeep.middlewares=karakeep-headers"
+      - "diun.enable=true"
+    networks:
+      - traefik
+
+  karakeep-chrome:
+    image: gcr.io/zenika-hub/alpine-chrome:123
+    container_name: karakeep-chrome
+    restart: unless-stopped
+    command: chromium-browser --headless --no-sandbox --disable-gpu --disable-dev-shm-usage --remote-debugging-address=0.0.0.0 --remote-debugging-port=9222 --hide-scrollbars
+    networks:
+      - traefik
+
+  karakeep-meilisearch:
+    image: getmeili/meilisearch:v1.11.1
+    container_name: karakeep-meilisearch
+    restart: unless-stopped
+    environment:
+      - MEILI_NO_ANALYTICS=true
+      - MEILI_MASTER_KEY=${KARAKEEP_MEILI_MASTER_KEY}
+    volumes:
+      - ${APPDATA_ROOT}/karakeep/meilisearch:/meili_data
+    labels:
+      - "diun.enable=true"
+    networks:
+      - traefik
+
+networks:
+  traefik:
+    external: true
