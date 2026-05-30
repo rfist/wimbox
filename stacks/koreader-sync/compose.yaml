@@ -21,6 +21,11 @@ services:
       - traefik.http.routers.kosync.rule=Host(`kosync.${BASE_DOMAIN}`)
       - traefik.http.routers.kosync.entrypoints=web
       - traefik.http.services.kosync.loadbalancer.server.port=17200
+      - "homepage.group=System"
+      - "homepage.name=KOSync"
+      - "homepage.icon=koreader"
+      - "homepage.href=https://kosync.${BASE_DOMAIN}"
+      - "homepage.description=KOReader sync server"
     networks:
       - traefik
 

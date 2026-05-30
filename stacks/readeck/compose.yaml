@@ -18,6 +18,11 @@ services:
       - "traefik.http.middlewares.readeck-headers.headers.customrequestheaders.X-Forwarded-Proto=https"
       - "traefik.http.routers.readeck.middlewares=readeck-headers"
       - "diun.enable=true"
+      - "homepage.group=Read"
+      - "homepage.name=Readeck"
+      - "homepage.icon=readeck"
+      - "homepage.href=https://readeck.${BASE_DOMAIN}"
+      - "homepage.description=Read-it-later"
     networks:
       - traefik
 

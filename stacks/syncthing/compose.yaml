@@ -13,4 +13,8 @@ services:
       - ${MEDIA_ROOT}/syncthing:/data
     labels:
       - "diun.enable=true"
+      - "homepage.group=Files"
+      - "homepage.name=Syncthing"
+      - "homepage.icon=syncthing"
+      - "homepage.description=File synchronization"
 

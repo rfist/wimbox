@@ -23,6 +23,11 @@ services:
       - "traefik.http.middlewares.miniflux-headers.headers.customrequestheaders.X-Forwarded-Proto=https"
       - "traefik.http.routers.miniflux.middlewares=miniflux-headers"
       - "diun.enable=true"
+      - "homepage.group=Read"
+      - "homepage.name=Miniflux"
+      - "homepage.icon=miniflux"
+      - "homepage.href=https://rss.${BASE_DOMAIN}"
+      - "homepage.description=RSS reader"
     networks:
       - traefik
 

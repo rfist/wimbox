@@ -25,6 +25,11 @@ services:
       - "traefik.http.middlewares.karakeep-headers.headers.customrequestheaders.X-Forwarded-Proto=https"
       - "traefik.http.routers.karakeep.middlewares=karakeep-headers"
       - "diun.enable=true"
+      - "homepage.group=Read"
+      - "homepage.name=Karakeep"
+      - "homepage.icon=karakeep"
+      - "homepage.href=https://karakeep.${BASE_DOMAIN}"
+      - "homepage.description=Read-it-later &amp; bookmarks"
     networks:
       - traefik
 

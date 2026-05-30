@@ -20,6 +20,11 @@ services:
       - "traefik.http.middlewares.linkding-headers.headers.customrequestheaders.X-Forwarded-Proto=https"
       - "traefik.http.routers.linkding.middlewares=linkding-headers"
       - "diun.enable=true"
+      - "homepage.group=Read"
+      - "homepage.name=Linkding"
+      - "homepage.icon=linkding"
+      - "homepage.href=https://linkding.${BASE_DOMAIN}"
+      - "homepage.description=Bookmark manager"
     networks:
       - traefik
 
