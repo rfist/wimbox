@@ -49,7 +49,7 @@ services:
       - MEILI_NO_ANALYTICS=true
       - MEILI_MASTER_KEY=${KARAKEEP_MEILI_MASTER_KEY}
     volumes:
-      - ${MEDIA_ROOT}/karakeep/meilisearch:/meili_data
+      - ${APPDATA_ROOT}/karakeep/meilisearch:/meili_data
     labels:
       - "diun.enable=true"
     networks:

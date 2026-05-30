@@ -1,12 +1,19 @@
-# Services not auto-discovered via Docker labels.
-# Use this for host-network services (no Traefik route) or external URLs.
-# Docker-managed services are discovered automatically via homepage.* labels.
+# Copy to ${APPDATA_ROOT}/homepage/services.yaml on the Pi
+# Homepage hot-reloads on save — no restart needed
+#
+# Use this file for services NOT auto-discovered via Docker labels
+# (e.g. host-network containers, external services, other machines)
 
 - Media:
     - Plex:
         href: http://YOUR_PI_IP:32400/web
         description: Media server
         icon: plex
+        # Optional: widget to show active streams
+        # widget:
+        #   type: plex
+        #   url: http://YOUR_PI_IP:32400
+        #   key: YOUR_PLEX_TOKEN
 
 - Files:
     - Syncthing:
