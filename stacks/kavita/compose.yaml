@@ -18,6 +18,11 @@ services:
       - "traefik.http.routers.kavita.entrypoints=web"
       - "traefik.http.services.kavita.loadbalancer.server.port=5000"
       - "diun.enable=true"
+      - "homepage.group=Media"
+      - "homepage.name=Kavita"
+      - "homepage.icon=kavita"
+      - "homepage.href=https://kavita.${BASE_DOMAIN}"
+      - "homepage.description=Manga &amp; books"
     networks:
       - traefik
 

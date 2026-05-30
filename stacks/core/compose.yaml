@@ -56,6 +56,11 @@ services:
       # FIX CSRF behind Cloudflare Tunnel (HTTPS outside, HTTP inside)
       - "traefik.http.middlewares.portainer-headers.headers.customrequestheaders.X-Forwarded-Proto=https"
       - "traefik.http.routers.portainer.middlewares=portainer-headers"
+      - "homepage.group=System"
+      - "homepage.name=Portainer"
+      - "homepage.icon=portainer"
+      - "homepage.href=https://portainer.${BASE_DOMAIN}"
+      - "homepage.description=Container management"
 
   diun:
     image: crazymax/diun:latest

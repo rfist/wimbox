@@ -20,6 +20,11 @@ services:
       - "traefik.http.routers.immich.entrypoints=web"
       - "traefik.http.services.immich.loadbalancer.server.port=2283"
       - "diun.enable=true"
+      - "homepage.group=Media"
+      - "homepage.name=Immich"
+      - "homepage.icon=immich"
+      - "homepage.href=https://immich.${BASE_DOMAIN}"
+      - "homepage.description=Photo &amp; video backup"
     depends_on:
       - immich-redis
       - immich-database

@@ -21,6 +21,11 @@ services:
       - "traefik.http.middlewares.ntfy-headers.headers.customrequestheaders.X-Forwarded-Proto=https"
       - "testlabel"
       - "traefik.http.routers.ntfy.middlewares=ntfy-headers"
+      - "homepage.group=System"
+      - "homepage.name=Ntfy"
+      - "homepage.icon=ntfy"
+      - "homepage.href=https://ntfy.${BASE_DOMAIN}"
+      - "homepage.description=Push notifications"
 
 networks:
   traefik:

@@ -17,6 +17,11 @@ services:
       - "traefik.http.routers.metube.entrypoints=web"
       - "traefik.http.services.metube.loadbalancer.server.port=8081"
       - "diun.enable=true"
+      - "homepage.group=Media"
+      - "homepage.name=MeTube"
+      - "homepage.icon=metube"
+      - "homepage.href=https://metube.${BASE_DOMAIN}"
+      - "homepage.description=YouTube downloader"
     networks:
       - traefik
 

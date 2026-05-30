@@ -20,4 +20,8 @@ services:
       # - ${MEDIA_ROOT}/music:/music
     labels:
       - "diun.enable=true"
+      - "homepage.group=Media"
+      - "homepage.name=Plex"
+      - "homepage.icon=plex"
+      - "homepage.description=Media server"
 

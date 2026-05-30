@@ -17,6 +17,11 @@ services:
       - traefik.http.routers.dufs.entrypoints=web
       - traefik.http.services.dufs.loadbalancer.server.port=5000
       - diun.enable=true
+      - "homepage.group=Files"
+      - "homepage.name=Dufs"
+      - "homepage.icon=dufs"
+      - "homepage.href=https://dufs.${BASE_DOMAIN}"
+      - "homepage.description=WebDAV file server"
     networks:
       - traefik
 
