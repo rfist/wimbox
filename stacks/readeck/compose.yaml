@@ -1,0 +1,26 @@
+services:
+  readeck:
+    image: codeberg.org/readeck/readeck:latest
+    container_name: readeck
+    restart: unless-stopped
+    environment:
+      - READECK_LOG_LEVEL=info
+      - READECK_SERVER_HOST=0.0.0.0
+      - READECK_SERVER_PORT=8000
+      - READECK_SERVER_PREFIX=/
+    volumes:
+      - ${APPDATA_ROOT}/readeck:/readeck
+    labels:
+      - "traefik.enable=true"
+      - "traefik.http.routers.readeck.rule=Host(`readeck.${BASE_DOMAIN}`)"
+      - "traefik.http.routers.readeck.entrypoints=web"
+      - "traefik.http.services.readeck.loadbalancer.server.port=8000"
+      - "traefik.http.middlewares.readeck-headers.headers.customrequestheaders.X-Forwarded-Proto=https"
+      - "traefik.http.routers.readeck.middlewares=readeck-headers"
+      - "diun.enable=true"
+    networks:
+      - traefik
+
+networks:
+  traefik:
+    external: true
