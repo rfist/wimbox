@@ -56,7 +56,7 @@ services:
       - traefik
 
   immich-database:
-    image: tensorchord/pgvecto-rs:pg14-v0.2.0
+    image: ghcr.io/immich-app/postgres:14-vectorchord0.4.3-pgvectors0.2.0
     container_name: immich_database
     restart: unless-stopped
     env_file:
@@ -68,6 +68,7 @@ services:
       - POSTGRES_INITDB_ARGS=--data-checksums
     volumes:
       - ${APPDATA_ROOT}/immich/postgres:/var/lib/postgresql/data
+    shm_size: 128mb
     labels:
       - "diun.enable=true"
     networks:
