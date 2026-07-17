@@ -1,0 +1,6 @@
+[Unit]
+Description=Prune unused Docker images and build cache
+
+[Service]
+Type=oneshot
+ExecStart=%h/homelab/scripts/docker_prune.sh
