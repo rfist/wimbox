@@ -1,0 +1,9 @@
+[Unit]
+Description=Weekly Docker image/build cache prune
+
+[Timer]
+OnCalendar=Sun 04:30
+Persistent=true
+
+[Install]
+WantedBy=timers.target
