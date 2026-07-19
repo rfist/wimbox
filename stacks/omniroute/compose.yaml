@@ -1,0 +1,72 @@
+services:
+  omniroute-init:
+    image: busybox
+    command: chown -R 1000:1000 /app/data
+    volumes:
+      - ${APPDATA_ROOT}/omniroute/data:/app/data
+    user: root
+
+  omniroute-redis:
+    image: redis:7-alpine
+    container_name: omniroute-redis
+    restart: unless-stopped
+    command: redis-server --save 60 1 --loglevel warning
+    volumes:
+      - ${APPDATA_ROOT}/omniroute/redis:/data
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 10s
+      timeout: 5s
+      retries: 3
+    labels:
+      - "diun.enable=true"
+    networks:
+      - traefik
+
+  omniroute:
+    image: diegosouzapw/omniroute:latest
+    container_name: omniroute
+    restart: unless-stopped
+    stop_grace_period: 40s
+    env_file:
+      - .env
+    environment:
+      - TZ=${TZ}
+      - PORT=20128
+      - DATA_DIR=/app/data
+      - REDIS_URL=redis://omniroute-redis:6379
+      # Behind Traefik + Cloudflare Tunnel, TLS is terminated upstream.
+      - AUTH_COOKIE_SECURE=true
+      # Real-time live dashboard WebSocket not wired through Traefik yet; disable to
+      # avoid a second exposed port. Re-enable + add a traefik router if needed later.
+      - OMNIROUTE_ENABLE_LIVE_WS=false
+      - JWT_SECRET=${OMNIROUTE_JWT_SECRET}
+      - API_KEY_SECRET=${OMNIROUTE_API_KEY_SECRET}
+      - INITIAL_PASSWORD=${OMNIROUTE_INITIAL_PASSWORD}
+      - OMNIROUTE_WS_BRIDGE_SECRET=${OMNIROUTE_WS_BRIDGE_SECRET}
+    volumes:
+      - ${APPDATA_ROOT}/omniroute/data:/app/data
+    depends_on:
+      omniroute-init:
+        condition: service_completed_successfully
+      omniroute-redis:
+        condition: service_healthy
+    labels:
+      - "traefik.enable=true"
+      - "traefik.http.routers.omniroute.rule=Host(`omniroute.${BASE_DOMAIN}`)"
+      - "traefik.http.routers.omniroute.entrypoints=web"
+      - "traefik.http.services.omniroute.loadbalancer.server.port=20128"
+      - "traefik.http.middlewares.omniroute-headers.headers.customrequestheaders.X-Forwarded-Proto=https"
+      - "traefik.http.routers.omniroute.middlewares=omniroute-headers"
+      - "diun.enable=true"
+      - "homepage.group=System"
+      - "homepage.name=OmniRoute"
+      - "homepage.icon=mdi-router-network"
+      - "homepage.href=https://omniroute.${BASE_DOMAIN}"
+      - "homepage.description=AI gateway / LLM router"
+    networks:
+      - traefik
+
+networks:
+  traefik:
+    external: true
