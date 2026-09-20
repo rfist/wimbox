@@ -26,6 +26,10 @@ Application state (databases, caches, thumbnails) always belongs under
 `APPDATA_ROOT`, never in the media tree. `/mnt/media` is NTFS via ntfs-3g, where
 ownership is not enforced and PostgreSQL cannot run.
 
+Comic archives carry their series and volume in an embedded `ComicInfo.xml`,
+which both BookOrbit and Kavita read. `scripts/comics/` derives those tags from
+the folder layout, audits them, and repacks CBR to CBZ so it can hold one.
+
 When repointing an app at a new host path, keep its **container** path unchanged:
 Kavita and Audiobookshelf store absolute container paths in their databases, so
 moving only the host side needs no database surgery.
