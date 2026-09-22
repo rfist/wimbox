@@ -26,7 +26,7 @@ services:
       - traefik
 
   bookorbit:
-    image: ghcr.io/bookorbit/bookorbit:2.10.0
+    image: ghcr.io/bookorbit/bookorbit:3.0.0
     container_name: bookorbit
     restart: unless-stopped
     init: true
@@ -42,6 +42,7 @@ services:
       - POSTGRES_PASSWORD=${BOOKORBIT_DB_PASSWORD}
       - POSTGRES_DB=bookorbit
       - JWT_SECRET=${BOOKORBIT_JWT_SECRET}
+      - PODCAST_ENCRYPTION_KEY=${BOOKORBIT_PODCAST_ENCRYPTION_KEY}
       - SETUP_BOOTSTRAP_TOKEN=${BOOKORBIT_SETUP_TOKEN}
       - APP_URL=https://bookorbit.${BASE_DOMAIN}
       - CLIENT_URL=https://bookorbit.${BASE_DOMAIN}
